@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "594646281209",
+    "project_id": "chat-app-fbc6a",
+    "storage_bucket": "chat-app-fbc6a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594646281209:android:630687be064d78b2ad6b28",
+        "android_client_info": {
+          "package_name": "com.bbl.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594646281209-23jna9h69i3a4o5erhenmvgtup4f6tcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQTIhN87biNbdxOWLyVGcqrL_tjgJnm9w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594646281209-23jna9h69i3a4o5erhenmvgtup4f6tcv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
