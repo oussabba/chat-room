@@ -1,14 +1,23 @@
+import 'package:chatapp/Core/utils/helpers.dart';
+import 'package:chatapp/UI/Views/messages_view.dart';
 import 'package:chatapp/UI/Widgets/app_button.dart';
 import 'package:chatapp/UI/Widgets/app_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class RegisterView extends StatelessWidget {
-  RegisterView({Key? key}) : super(key: key);
+class RegisterView extends StatefulWidget {
+  const RegisterView({Key? key}) : super(key: key);
+
+  @override
+  State<RegisterView> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _auth = FirebaseAuth.instance;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +55,23 @@ class RegisterView extends StatelessWidget {
                   height: 30,
                 ),
                 AppButton(
-                  label: 'Register',
-                  color: Colors.white,
-                  bgColor: theme.primaryColor,
-                  onPressed: () => _auth.createUserWithEmailAndPassword(
-                      email: emailController.text,
-                      password: passwordController.text),
-                )
+                    label: 'Register',
+                    color: Colors.white,
+                    bgColor: theme.primaryColor,
+                    isLoading: isLoading,
+                    onPressed: () async {
+                      try {
+                        setState(() => isLoading = true);
+                        await _auth.createUserWithEmailAndPassword(
+                            email: emailController.text,
+                            password: passwordController.text);
+                        setState(() => isLoading = false);
+                        push(context: context, page: MessagesView());
+                      } on FirebaseAuthException catch (e) {
+                        setState(() => isLoading = false);
+                        showSnackBar(context, e.message.toString(), Colors.red);
+                      }
+                    })
               ],
             ),
           )),

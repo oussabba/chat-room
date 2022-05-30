@@ -1,11 +1,22 @@
+import 'package:chatapp/Core/utils/helpers.dart';
+import 'package:chatapp/UI/Views/messages_view.dart';
 import 'package:chatapp/UI/Widgets/app_button.dart';
 import 'package:chatapp/UI/Widgets/app_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SignInView extends StatelessWidget {
-  SignInView({Key? key}) : super(key: key);
+class SignInView extends StatefulWidget {
+  const SignInView({Key? key}) : super(key: key);
+
+  @override
+  State<SignInView> createState() => _SignInViewState();
+}
+
+class _SignInViewState extends State<SignInView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +47,7 @@ class SignInView extends StatelessWidget {
             AppTextFormField(
               controller: passwordController,
               hint: 'Password',
+              isPassword: true,
             ),
             const SizedBox(
               height: 30,
@@ -44,7 +56,21 @@ class SignInView extends StatelessWidget {
               label: 'Sign in',
               color: Colors.white,
               bgColor: theme.primaryColor,
-              onPressed: () {},
+              isLoading: isLoading,
+              onPressed: () async {
+                try {
+                  setState(() => isLoading = true);
+                  await _auth.signInWithEmailAndPassword(
+                      email: emailController.text,
+                      password: passwordController.text);
+                  setState(() => isLoading = false);
+                  push(context: context, page: const MessagesView());
+                } on FirebaseAuthException catch (e) {
+                  setState(() => isLoading = false);
+
+                  showSnackBar(context, e.message.toString(), Colors.red);
+                }
+              },
             )
           ],
         ),

@@ -1,7 +1,37 @@
+import 'dart:developer';
+
+import 'package:chatapp/Core/utils/helpers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class MessagesView extends StatelessWidget {
+class MessagesView extends StatefulWidget {
   const MessagesView({Key? key}) : super(key: key);
+
+  @override
+  State<MessagesView> createState() => _MessagesViewState();
+}
+
+class _MessagesViewState extends State<MessagesView> {
+  final _auth = FirebaseAuth.instance;
+  late User currentUser;
+
+  void getCurrentUser() {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        currentUser = user;
+        log(currentUser.email.toString());
+      }
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(context, e.toString(), Colors.red);
+    }
+  }
+
+  @override
+  void initState() {
+    getCurrentUser();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +46,10 @@ class MessagesView extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {},
+            onPressed: () {
+              _auth.signOut();
+              Navigator.pop(context);
+            },
           )
         ],
       ),
